@@ -3,8 +3,8 @@ addpath regress_methods
 addpath regress_util
 addpath fa_util
 %load('data/sample_data.mat') % for Semedo et al. sample data 
-params.animal = 'CJ191';
-params.pen = '002';
+params.animal = 'CJ177';
+params.pen = '007';
 params.StimType = 'Square';
 intra_areal = 0;
 

@@ -52,7 +52,7 @@ for subtract_PTSH = 0:1  % tracks whether I'm subtracting the peristimulus time 
         load(['data/' params.animal '/' params.pen '/SDFs.mat']);
         load(['data/' params.animal '/' params.pen '/exclusions.mat']);
         V1_data = all_sdfs.(params.StimType){1,params.ori}(logical(OK.anyVisual{1,1}),:,params.downsample); % pulling the relevant spike counts from the SDFs file
-        MT_data = all_sdfs.(params.StimType){2,params.ori}(logical(OK.anyVisual{1,2}),:,params.downsample);
+        MT_data = all_sdfs.(params.StimType){2,params.ori}(logical(OK.anyVisual{1,2}),:,params.downsample); % these arrays should be N neurons x 300 trials x 10 bins
         clear('all_sdfs','OK');
 
         %% preprocess
