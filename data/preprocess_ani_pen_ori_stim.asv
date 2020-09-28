@@ -7,8 +7,7 @@
 %         - exclusions.mat differentiates  neurons that do /don't react to
 %         visual input. (CURRENTLY USING ANYVISUAL - LIZ?)
 % outputs:
-% for each stimulus orientation of a chosen animal / penetration / stimulus
-% type:
+% for each stimulus orientation of a chosen 
 %         - V1_concat, a p x N matrix containing concatenated N datapoints
 %         of p neurons. N = 10 timepoints (listed in downsample) from the
 %         stimulus phase x 300 trials. 
