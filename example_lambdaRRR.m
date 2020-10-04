@@ -2,7 +2,7 @@
 
 SET_CONSTS
 
-load('mat_sample/sample_data.mat')
+load('data/sample_data.mat')
 
 %% lambda-Reduced Rank Regression cross-validation examples ++++++++++++++
 % ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

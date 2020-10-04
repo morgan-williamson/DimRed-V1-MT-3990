@@ -3,8 +3,8 @@ addpath regress_methods
 addpath regress_util
 addpath fa_util
 %load('data/sample_data.mat') % for Semedo et al. sample data 
-params.animal = 'CJ177';
-params.pen = '007';
+params.animal = 'CJ191';
+params.pen = '002';
 params.StimType = 'Square';
 intra_areal = 0;
 
@@ -171,7 +171,7 @@ for subtract_PTSH = 0:1
         %% Saving figures
         title(['V1 - ' Y_reg ' RRR, ' params.animal '/' params.pen ', ' params.StimType ' ori ' num2str(params.ori) ' ' params.residuals 'pp']);
         savefig(['figures/' params.animal '/' params.pen '/V1_' Y_reg '_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp']);
-
+        saveas(gcf,['figures/' params.animal '/' params.pen '/V1_' Y_reg '_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp.jpg'])
         clearvars -except params o intra_areal subtract_PTSH
     end
 end

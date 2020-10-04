@@ -1,4 +1,4 @@
-function [alphaOpt, optLoss] = ModelSelect(cvLoss, alpha)
+function [alphaOpt, optLoss, alphaOptIdx] = ModelSelect(cvLoss, alpha)
 % 
 % alphaOpt = ModelSelect(cvLoss, alpha) selects the optimal regression
 % parameter alpha based on the cross-validated loss. The optimal

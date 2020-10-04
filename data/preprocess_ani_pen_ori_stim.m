@@ -29,12 +29,12 @@ clear all;
 
 %% params
 
-params.animal = 'CJ191';        % pick your pokemon  {'CJ177','CJ179','CJ191'}
-params.pen = '002';             % penetration number e.g. 007/008 for CJ177
+params.animal = 'CJ177';        % pick your pokemon  {'CJ177','CJ179','CJ191'}
+params.pen = '008';             % penetration number e.g. 007/008 for CJ177
 params.StimType = 'Square';     % stimulus type {'Square', 'SineWave, 'PSSquare'?, 'Dots'}
 params.downsample = 80:50:530;  % these are the timepoints at which I've decided to downsample, expecting it to be 50ms bins centred every 50ms from +80 to +530 ms post stimulus
 
-for subtract_PTSH = 0:1  % tracks whether I'm subtracting the peristimulus time histogram from each timeseries per trial per neuron (default yes, but I want to try run the code on evoked data? then again it's no longer stationary)
+for subtract_PTSH = 1:1  % tracks whether I'm subtracting the peristimulus time histogram from each timeseries per trial per neuron (default yes, but I want to try run the code on evoked data? then again it's no longer stationary)
     for o = 1:12 % tracks direction / orientation of the stimulus (1-12 as in SDFs.mat)
 
         params.ori = o; 
