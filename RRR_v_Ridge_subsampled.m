@@ -4,39 +4,48 @@ clear all
 addpath regress_methods
 addpath regress_util
 addpath fa_util
-%load('data/sample_data.mat') % for Semedo et al. sample data 
+%load('data/sample_data.mat') % for Semedo et al. sample data
+
 params.StimType = 'Square';
 repeats = 25; % # of times I resample the source/target subpopulations based on FR-distribution matching
+shuffled = {'',''};
+%shuffled  =  '_SHUFFLED';
+%shuffled  =  {'_SUPERSHUFFLED', ' SuperShuffled'};
+strlambda = {'\lambda{}-', '_lambda'}; % if so, also set RidgeInit to true in RRR CV options below
+%strlambda = {'',''};
 
-for subtract_PTSH = 0:1
+for subtract_PTSH = 1:1
 
-    for ani = {'CJ177','CJ179','CJ191'}
+    for ani = {'CJ179','CJ190'} % {'CJ177','CJ179','CJ190','CJ191'}
 
+    
         params.animal = ani{1};
-
+        
         if subtract_PTSH == 1
             params.residuals = '';
         else 
             params.residuals = 'non';
         end 
-
+        
+        
         if strcmp(ani{1}, 'CJ177')
             pens = {'007','008'};
         elseif strcmp(ani{1}, 'CJ179')
-            pens = {'012'};
-        else
+            pens = {'013','016'}; %{'012','013','016'};
+        elseif strcmp(ani{1},'CJ190')
+            pens = {'001','003'};
+        elseif strcmp(ani{1},'CJ191')
             pens = {'002'};
         end
+    
 
         for p = pens
             params.pen = p{1};
 
-
-
-            for o = 1:12
+            for o = 1:12 % loops through the 12 different directions of stimulus presentation 
                 params.ori = o 
                 
-                datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp.mat'];
+                datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp' shuffled{1} '.mat'];
                 load(datapath);
                 
                 if params.target_pop_size < 10
@@ -44,8 +53,6 @@ for subtract_PTSH = 0:1
                 else 
                     num_predict_dim = 10;
                 end
-                
-                
                 
                 % stores cv regression performance
                 cvPlots_V1 = zeros(2,num_predict_dim,repeats); % [mean, stderr] x 10 dims x 25 repeats. 
@@ -64,16 +71,13 @@ for subtract_PTSH = 0:1
 
                     SET_CONSTS
 
-
                     %% Cross-validate Reduced Rank Regression
 
                     % Vector containing the interaction dimensionalities to use when fitting
                     % RRR. 0 predictive dimensions results in using the mean for prediction.
-                    
-                    
+                                      
                     numDimsUsedForPrediction = 1:num_predict_dim;
-                     
-
+                    
                     % Number of cross validation folds.
                     cvNumFolds = 10;
 
@@ -93,14 +97,12 @@ for subtract_PTSH = 0:1
                     % predict the test set, reporting the model's test performance. Here we
                     % use NSE (Normalized Squared Error) as the performance metric. MSE (Mean
                     % Squared Error) is also available.
-                    
-                                       
+                                 
                     cvFun = @(Ytrain, Xtrain, Ytest, Xtest) RegressFitAndPredict...
                         (regressMethod, Ytrain, Xtrain, Ytest, Xtest, ...
-                        numDimsUsedForPrediction, 'LossMeasure', 'NSE');
+                        numDimsUsedForPrediction, 'LossMeasure', 'NSE',...
+                        'RidgeInit', true, 'Scale', false);
 
-                    
-                    
                     %% RRR V1-MT
 
                     % Cross-validation routine.
@@ -117,11 +119,10 @@ for subtract_PTSH = 0:1
                     clear('cvl','cvFun');
                     %% RRR V1-V1
                     
-                    
                     cvFun = @(Ytrain, Xtrain, Ytest, Xtest) RegressFitAndPredict...
                         (regressMethod, Ytrain, Xtrain, Ytest, Xtest, ...
-                        numDimsUsedForPrediction, 'LossMeasure', 'NSE');
-
+                        numDimsUsedForPrediction, 'LossMeasure', 'NSE',...
+                        'RidgeInit', true, 'Scale', false);
                     
                     cvl = crossval(cvFun, Y_V1, X, ...
                           'KFold', cvNumFolds, ...
@@ -167,8 +168,7 @@ for subtract_PTSH = 0:1
                     clear('cvl','cvFun');
                     
                     %% Ridge Regression V1-V1
-                    
-                    
+                                        
                     cvFun = @(Ytrain, Xtrain, Ytest, Xtest) RegressFitAndPredict...
                         (@RidgeRegress, Ytrain, Xtrain, Ytest, Xtest, lambda, ...
                         'LossMeasure', 'NSE');       
@@ -210,16 +210,16 @@ for subtract_PTSH = 0:1
                      'MarkerFaceColor', 'b', 'MarkerSize', 10)
                 hold off
 
-                legend('Reduced Rank Regression', ...
+                legend([strlambda{1} 'Reduced Rank Regression'], ...
                     'Ridge Regression', ...
                     'Location', 'SouthEast')                
                 
                 %% Saving V1-MT regression
                 
-                title(['V1 - MT RRR, ' params.animal '/' params.pen ', ' params.StimType ' ori ' num2str(params.ori) ' ' params.residuals 'pp']);
-                savefig(['figures/' params.animal '/' params.pen '/V1_MT_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp']);
-                saveas(gcf,['figures/' params.animal '/' params.pen '/V1_MT_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp.jpg'])
-                save(['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_MT_regressVals.mat'],...
+                title(['V1 - MT ' strlambda{1} 'RRR, ' params.animal '/' params.pen ', ' params.StimType ' ori ' num2str(params.ori) ' ' params.residuals 'pp ' shuffled{2}]);
+                savefig(['figures/' params.animal '/' params.pen '/V1_MT_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp' strlambda{2} shuffled{1}]);
+                saveas(gcf,['figures/' params.animal '/' params.pen '/V1_MT_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp' strlambda{2} shuffled{1} '.jpg'])
+                save(['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_MT_regressVals' strlambda{2} shuffled{1} '.mat'],...
                     'cvPlots_MT','ridgePlots_MT','params');
                 
                 %% Plotting V1-V1 regression
@@ -242,20 +242,19 @@ for subtract_PTSH = 0:1
                      'MarkerFaceColor', 'b', 'MarkerSize', 10)
                 hold off
 
-                legend('Reduced Rank Regression', ...
+                legend([strlambda{1} 'Reduced Rank Regression'], ...
                     'Ridge Regression', ...
                     'Location', 'SouthEast')                
                               
                 %% Saving V1-V1 regression
-                title(['V1 - V1 RRR, ' params.animal '/' params.pen ', ' params.StimType ' ori ' num2str(params.ori) ' ' params.residuals 'pp']);
-                savefig(['figures/' params.animal '/' params.pen '/V1_V1_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp']);
-                saveas(gcf,['figures/' params.animal '/' params.pen '/V1_V1_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp.jpg'])
-                save(['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_V1_regressVals.mat'],...
+                title(['V1 - V1 ' strlambda{1} 'RRR, ' params.animal '/' params.pen ', ' params.StimType ' ori ' num2str(params.ori) ' ' params.residuals 'pp' shuffled{2}]);
+                savefig(['figures/' params.animal '/' params.pen '/V1_V1_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp' strlambda{2} shuffled{1}]);
+                saveas(gcf,['figures/' params.animal '/' params.pen '/V1_V1_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp' strlambda{2} shuffled{1} '.jpg'])
+                save(['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_V1_regressVals' strlambda{2} shuffled{1} '.mat'],...
                     'cvPlots_V1','ridgePlots_V1','params');
                 
-                clearvars -except params o intra_areal subtract_PTSH repeats ani p pens
+                clearvars -except params o intra_areal subtract_PTSH repeats ani p pens shuffled strlambda
             end %all orientations
         end % all penetrations
-        
     end % all animals
 end % residual or not
