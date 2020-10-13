@@ -3,9 +3,6 @@
 
 clear all 
 
-addpath regress_methods
-addpath regress_util
-addpath fa_util
 params.StimType = 'Square';
 params.downsample = 80:50:530;
 params.shuffled = 2;
@@ -18,21 +15,23 @@ end
 
 for subtract_PTSH = 0:1
 
-    for ani = {'CJ177','CJ179','CJ191'} % tracks which animal 
+    for ani =  {'CJ179','CJ190'} % {'CJ177','CJ179','CJ190','CJ191'} % tracks which animal 
 
         params.animal = ani{1};
-
-        if subtract_PTSH == 1         % tracks whether to use residuals (i.e. subtract a peri-stimulus time histogram) or unprocessed data
-            params.residuals = '';   
+        
+        if subtract_PTSH == 1
+            params.residuals = '';
         else 
             params.residuals = 'non';
         end 
-
-        if strcmp(ani{1}, 'CJ177')    % assigns the appropriate list of penetrations to loop through for a given animal 
+        
+        if strcmp(ani{1}, 'CJ177')
             pens = {'007','008'};
         elseif strcmp(ani{1}, 'CJ179')
-            pens = {'012'};
-        else
+            pens = {'013','016'}; %{'012','013','016'};
+        elseif strcmp(ani{1},'CJ190')
+            pens = {'001','003'};
+        elseif strcmp(ani{1},'CJ191')
             pens = {'002'};
         end
 
@@ -44,7 +43,7 @@ for subtract_PTSH = 0:1
             for o = 1:12 % loops through the 12 different directions of stimulus presentation 
                 params.ori = o 
                 
-                datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp' shuffled '.mat'];
+                datapath = ['data' filesep params.animal filesep params.pen filesep params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp' shuffled '.mat'];
                 
                 datapoints_per_trial = size(params.downsample,2); %1000; down to 10 according to current definition of downsample
 

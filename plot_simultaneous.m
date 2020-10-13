@@ -25,9 +25,9 @@ repeats = 25; % # of times I resample the source/target subpopulations based on 
 shuffled  =  {'_SUPERSHUFFLED', ' SuperShuffled'};
 %strlambda = {'lambda-', '_lambda'}; % currently also got RidgeInit set to 1
 strlambda = {'',''};
-for subtract_PTSH = 1:1
+for subtract_PTSH = 0:1
 
-    for ani = {'CJ177','CJ179','CJ191'} % tracks which animal 
+    for ani = {'CJ177','CJ179','CJ190','CJ191'} % tracks which animal 
 
         params.animal = ani{1};
 
@@ -37,11 +37,13 @@ for subtract_PTSH = 1:1
             params.residuals = 'non';
         end 
 
-        if strcmp(ani{1}, 'CJ177')    % assigns the appropriate list of penetrations to loop through for a given animal 
+        if strcmp(ani{1}, 'CJ177')
             pens = {'007','008'};
         elseif strcmp(ani{1}, 'CJ179')
-            pens = {'012'};
-        else
+            pens = {'012','013','016'};
+        elseif strcmp(ani{1},'CJ190')
+            pens = {'001','003'};
+        elseif strcmp(ani{1},'CJ191')
             pens = {'002'};
         end
 

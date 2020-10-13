@@ -34,7 +34,7 @@ clear all;
 params.StimType = 'Square';     % stimulus type {'Square', 'SineWave, 'PSSquare'?, 'Dots'}
 params.downsample = 80:50:530;  % these are the timepoints at which I've decided to downsample, expecting it to be 50ms bins centred every 50ms from +80 to +530 ms post stimulus
 
-for subtract_PTSH = 0:1
+for subtract_PTSH = 1:1
 
     for ani =  {'CJ179','CJ190'} % {'CJ177','CJ179','CJ190','CJ191'} % tracks which animal 
 
@@ -74,7 +74,7 @@ for subtract_PTSH = 0:1
                     params.residuals = 'non';
                 end 
 
-                datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp.mat'];
+                datapath = ['data' filesep params.animal filesep params.pen filesep params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp.mat'];
 
                 datapoints_per_trial = size(params.downsample,2); %1000; down to 10 according to current definition of downsample
 
