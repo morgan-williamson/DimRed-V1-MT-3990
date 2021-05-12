@@ -18,9 +18,12 @@ clear axesColorOrder
 
 
 
-params.StimType = 'Square';
+%params.StimType = 'Square';
+%params.StimType = 'SineWave';
+params.StimType = 'PSsquare';
 
-for subtract_PTSH = 0:1
+
+for subtract_PTSH = 1:1
 
     for ani = {'CJ177','CJ179','CJ190','CJ191'}% tracks which animal 
 
@@ -50,12 +53,48 @@ for subtract_PTSH = 0:1
                 params.ori = o 
                 
                 
-                strlambda = {'',''};
-                shuffled  =  {'',''};
-
-                datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_V1_regressVals' strlambda{2} shuffled{1} '.mat'];
-                load(datapath);
+%                 strlambda = {'',''};
+                 shuffled  =  {'',''};
+% 
+%                 datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_V1_regressVals' strlambda{2} shuffled{1} '.mat'];
+%                 load(datapath);
                         
+%                 if params.target_pop_size < 10
+%                     num_predict_dim = params.target_pop_size;
+%                 else 
+%                     num_predict_dim = 10;
+%                 end
+%                 
+%                 numDimsUsedForPrediction = 1:num_predict_dim;
+% 
+%                 
+%                 
+%                 %% Plotting original regression
+%                 
+%                 y = 1 - mean(cvPlots_V1(1,:,:),3);
+%                 e = mean(cvPlots_V1(2,:,:),3);
+%                 x = numDimsUsedForPrediction;
+%                 p1 = errorbar(x, y, e, 'o--', 'Color', COLOR(orig,:), ...
+%                         'MarkerFaceColor', COLOR(orig,:), 'MarkerSize', 7)
+% 
+%                 xlabel('Number of predictive dimensions')
+%                 ylabel('Predictive performance')
+%                
+%                 y2 = 1 - mean(ridgePlots_V1(1,:),2);
+%                 e2 = mean(ridgePlots_V1(2,:),2); 
+%                 x2 = 0.5;
+%                 
+%                 hold on 
+%                 p2 = errorbar(x2,y2,e2,'d--', 'Color', COLOR(orig,:), ...
+%                      'MarkerFaceColor', 'w', 'MarkerSize', 7)
+                               
+                %% Plotting lambda regression
+                
+                strlambda = {'lambda-', '_lambda'};
+                datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_V1_regressVals' strlambda{2} shuffled{1} '_Predicted.mat'];
+
+                load(datapath);
+                
                 if params.target_pop_size < 10
                     num_predict_dim = params.target_pop_size;
                 else 
@@ -65,39 +104,11 @@ for subtract_PTSH = 0:1
                 numDimsUsedForPrediction = 1:num_predict_dim;
 
                 
-                
-                %% Plotting original regression
-                
-                y = 1 - mean(cvPlots_V1(1,:,:),3);
-                e = mean(cvPlots_V1(2,:,:),3);
-                x = numDimsUsedForPrediction;
-                p1 = errorbar(x, y, e, 'o--', 'Color', COLOR(orig,:), ...
-                        'MarkerFaceColor', COLOR(orig,:), 'MarkerSize', 7)
-
-                xlabel('Number of predictive dimensions')
-                ylabel('Predictive performance')
-               
-                y2 = 1 - mean(ridgePlots_V1(1,:),2);
-                e2 = mean(ridgePlots_V1(2,:),2); 
-                x2 = 0.5;
-                
-                hold on 
-                p2 = errorbar(x2,y2,e2,'d--', 'Color', COLOR(orig,:), ...
-                     'MarkerFaceColor', 'w', 'MarkerSize', 7)
-                               
-                %% Plotting lambda regression
-                
-                strlambda = {'lambda-', '_lambda'};
-                datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_V1_regressVals' strlambda{2} shuffled{1} '.mat'];
-
-                load(datapath);
-                
-                
                 y3 = 1 - mean(cvPlots_V1(1,:,:),3);
                 e3 = mean(cvPlots_V1(2,:,:),3);
                 x3 = numDimsUsedForPrediction;
                 
-                hold on
+%                 hold on
                 p3 = errorbar(x3, y3, e3, 'o--', 'Color', COLOR(lam,:), ...
                         'MarkerFaceColor', COLOR(lam,:), 'MarkerSize', 7)
                 hold off
@@ -113,9 +124,9 @@ for subtract_PTSH = 0:1
                 hold off
                  %% Plotting shuffled regression
                 
-                strlambda = {'', ''};
+%                 strlambda = {'', ''};
                 shuffled = {'_SHUFFLED', ' Shuffled'};
-                datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_V1_regressVals' strlambda{2} shuffled{1} '.mat'];
+                datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_V1_regressVals' strlambda{2} shuffled{1} '_Predicted.mat'];
 
                 load(datapath);
                 
@@ -140,9 +151,9 @@ for subtract_PTSH = 0:1
                 
                 %% Plotting SuperShuffled regression
                 
-                strlambda = {'', ''};
+%                 strlambda = {'', ''};
                 shuffled = {'_SUPERSHUFFLED', ' SuperShuffled'};
-                datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_V1_regressVals' strlambda{2} shuffled{1} '.mat'];
+                datapath = ['data/' params.animal '/' params.pen '/' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_' params.residuals 'pp_V1_regressVals' strlambda{2} shuffled{1} '_Predicted.mat'];
 
                 load(datapath);
                 
@@ -171,9 +182,9 @@ for subtract_PTSH = 0:1
 %                     'sShRRR',...
 %                     'Location', 'SouthEastoutside');
                 
-                title(['V1-V1 regress, ' params.animal '/' params.pen ', ' params.StimType ' ori ' num2str(params.ori) ' ' params.residuals 'pp']);
-                savefig(['figures/' params.animal '/' params.pen '/V1_V1_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp_COLLATED']);
-                saveas(gcf,['figures/' params.animal '/' params.pen '/V1_V1_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp_COLLATED.jpg'])
+                title(['V1-V1 regress, ' params.animal '/' params.pen ', ' params.StimType ' ori ' num2str(params.ori) ' ' params.residuals 'ppPredicted']);
+                savefig(['figures/' params.animal '/' params.pen '/V1_V1_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp_lambda_comp_Predicted']);
+                saveas(gcf,['figures/' params.animal '/' params.pen '/V1_V1_' params.animal '_' params.pen '_ori_' num2str(params.ori) '_' params.StimType '_regressplot_' params.residuals 'pp_lambda_comp_Predicted.jpg'])
                 
                 clearvars -except params o intra_areal subtract_PTSH repeats ani p pens shuffled strlambda COLOR orig lam sshuff shuff
             end %all orientations

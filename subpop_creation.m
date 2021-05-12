@@ -6,7 +6,7 @@ edges = 0:3:60;
 subtract_PTSH = 0;
 shuffled = '_SUPERSHUFFLED'; % set to '' for normal progression; set to '_SHUFFLED' for trial-shuffled control 
 %shuffled = '_SHUFFLED' % {'','_SHUFFLED','_SUPERSHUFFLED'}
-    for ani = {'CJ179','CJ190'} % {'CJ177','CJ179','CJ190','CJ191'} % tracks which animal 
+    for ani =  {'CJ177','CJ179','CJ190','CJ191'} % tracks which animal 
 
 
         params.animal = ani{1};
